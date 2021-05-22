@@ -40,6 +40,8 @@ import com.adam.aslfms.util.Track;
 import com.adam.aslfms.util.Util;
 
 import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author a93h
@@ -144,6 +146,19 @@ public class ControllerReceiverCallback extends MediaController.Callback {
             Track.Builder b = new Track.Builder();
             b.setMusicAPI(musicAPI);
             b.setWhen(Util.currentTimeSecsUTC());
+
+            if (mPlayer.equals("com.audioaddict.di")) {
+                albumArtist = "DI.FM Radio";
+                b.setSource("R");
+                String temp = track;
+                track = album;
+                album = temp;
+                Pattern pArtist = Pattern.compile("^(.+) - " + Pattern.quote(track) + "$");
+                Matcher mArtist = pArtist.matcher(artist);
+                if (mArtist.matches()) {
+                    artist = mArtist.group(1);
+                }
+            }
 
             b.setArtist(artist);
             b.setAlbum(album);
